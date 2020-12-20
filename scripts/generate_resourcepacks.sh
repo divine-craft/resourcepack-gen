@@ -3,6 +3,9 @@
 # Files excluded from generated archives
 readonly ARCHIVE_EXCLUSIONS='*.git*'
 
+# Make this script fail in case of failed commands
+set -ev
+
 ##################
 # Read constants #
 ##################
@@ -13,9 +16,6 @@ echo "Description: $DESCRIPTION"
 ###############################
 # Initialize target directory #
 ###############################
-
-# Make this script fail in case of failed commands
-set -ev
 
 # Create empty directory to store build files
 mkdir -p ./target/
