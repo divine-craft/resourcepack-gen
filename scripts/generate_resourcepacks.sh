@@ -1,4 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+# Files excluded from generated archives
+readonly ARCHIVE_EXCLUSIONS='*.git*'
 
 ##################
 # Read constants #
@@ -51,7 +54,7 @@ ${PYTHON_INTERPRETER} ./scripts/generate_pack_mcmeta.py \
 # Generate v3 ZIP-archive
 # `cd` is used not to keep full path to files
 cd ./target/resourcepack_v3/
-zip -r ../resourcepack_v3 .
+zip -r ../resourcepack_v3 . -x "$ARCHIVE_EXCLUSIONS"
 cd ../../
 
 ############################
@@ -78,5 +81,5 @@ ${PYTHON_INTERPRETER} ./scripts/generate_pack_mcmeta.py \
 # Generate v4 ZIP-archive
 # `cd` is used not to keep full path to files
 cd ./target/resourcepack_v4/
-zip -r ../resourcepack_v4 .
+zip -r ../resourcepack_v4 . -x "$ARCHIVE_EXCLUSIONS"
 cd ../../
