@@ -49,3 +49,23 @@ jobs:
           asset_path: ./target/resourcepack_v4.zip
           asset_name: resourcepack_v4.zip
           asset_content_type: application/zip
+
+      - name: Upload v3 signature
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./target/resourcepack_v3.zip
+          asset_name: resourcepack_v3.zip.sha1
+          asset_content_type: text/plain
+
+      - name: Upload v4 signature
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./target/resourcepack_v4.zip
+          asset_name: resourcepack_v4.zip.sha1
+          asset_content_type: text/plain
