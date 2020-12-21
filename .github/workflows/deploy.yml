@@ -14,18 +14,12 @@ jobs:
       - name: Generate resourcepacks
         run: $GITHUB_WORKSPACE/scripts/generate_resourcepacks.sh
 
-      - name: Setup Release assets directory
-        run: |
-          mkdir -p $GITHUB_WORKSPACE/.github/release_assets
-          mv $GITHUB_WORKSPACE/target/resourcepack_v3.zip $GITHUB_WORKSPACE/.github/release_assets/
-          mv $GITHUB_WORKSPACE/target/resourcepack_v4.zip $GITHUB_WORKSPACE/.github/release_assets/
-
       - name: Generate signatures
         run: |
-          sha1sum $GITHUB_WORKSPACE/.github/release_assets/resourcepack_v3.zip | cut -b -32 \
-          > $GITHUB_WORKSPACE/.github/release_assets/resourcepack_v3.zip.sha1
-          sha1sum $GITHUB_WORKSPACE/.github/release_assets/resourcepack_v4.zip | cut -b -32 \
-          > $GITHUB_WORKSPACE/.github/release_assets/resourcepack_v4.zip.sha1
+          sha1sum $GITHUB_WORKSPACE/target/resourcepack_v3.zip | cut -b -32 \
+          > $GITHUB_WORKSPACE/target/resourcepack_v3.zip.sha1
+          sha1sum $GITHUB_WORKSPACE/target/resourcepack_v4.zip | cut -b -32 \
+          > $GITHUB_WORKSPACE/target/resourcepack_v4.zip.sha1
 
       - name: Create Release
         id: create_release
@@ -36,10 +30,22 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: ${{ github.ref }}
 
-      - name: Upload Release assets
-        uses: dwenegar/upload-release-assets@v1
+      - name: Upload v3 resourcepack
+        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          release_id: ${{ steps.create_release.outputs.id }}
-          assets_path: $GITHUB_WORKSPACE/.github/release_assets
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./target/resourcepack_v3.zip
+          asset_name: resourcepack_v3.zip
+          asset_content_type: application/zip
+
+      - name: Upload v4 resourcepack
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./target/resourcepack_v4.zip
+          asset_name: resourcepack_v4.zip
+          asset_content_type: application/zip
