@@ -27,12 +27,6 @@ jobs:
           sha1sum $GITHUB_WORKSPACE/.github/release_assets/resourcepack_v4.zip | cut -b -32 \
           > $GITHUB_WORKSPACE/.github/release_assets/resourcepack_v4.zip.sha1
 
-      - name: Generate changelog
-        id: changelog
-        uses: TriPSs/conventional-changelog-action@v3
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -41,7 +35,6 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: ${{ github.ref }}
-          body: ${{ steps.changelog.outputs.clean_changelog }}
 
       - name: Upload Release assets
         uses: dwenegar/upload-release-assets@v1
