@@ -5,11 +5,15 @@ on:
     tags: [ 'v*' ]
 
 jobs:
-  build:
+  run:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          lfs: true
+
+      # Prepare artifacts
 
       - name: Generate resourcepacks
         run: $GITHUB_WORKSPACE/scripts/generate_resourcepacks.sh
@@ -21,6 +25,8 @@ jobs:
           sha1sum $GITHUB_WORKSPACE/target/resourcepack_v4.zip | cut -b -32 \
           > $GITHUB_WORKSPACE/target/resourcepack_v4.zip.sha1
 
+      # Release built artifacts
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -29,6 +35,8 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: ${{ github.ref }}
+
+        #  Upload resourcepacks
 
       - name: Upload v3 resourcepack
         uses: actions/upload-release-asset@v1
@@ -50,13 +58,15 @@ jobs:
           asset_name: resourcepack_v4.zip
           asset_content_type: application/zip
 
+      # Upload signatures
+
       - name: Upload v3 signature
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./target/resourcepack_v3.zip
+          asset_path: ./target/resourcepack_v3.zip.sha1
           asset_name: resourcepack_v3.zip.sha1
           asset_content_type: text/plain
 
@@ -66,6 +76,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./target/resourcepack_v4.zip
+          asset_path: ./target/resourcepack_v4.zip.sha1
           asset_name: resourcepack_v4.zip.sha1
           asset_content_type: text/plain
