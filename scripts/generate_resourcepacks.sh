@@ -30,7 +30,9 @@ mkdir ./target/resourcepack_v3/
 
 # Copy resourcepack files to manipulated directory
 cp -r ./assets/ ./target/resourcepack_v3/assets/
-cp ./pack.png ./target/resourcepack_v3/
+if [ -e ./pack.png ]; then
+  cp ./pack.png ./target/resourcepack_v3/
+fi
 
 # Find valid Python interpreter
 if [[ "$(python --version)" == "Python 3.*" ]]; then
